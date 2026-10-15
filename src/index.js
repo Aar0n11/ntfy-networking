@@ -1,6 +1,6 @@
 import { initKeys, getPublicKeyJWK, setPeerPublicKey, encryptMessage, decryptMessage } from './crypt.js';
 
-const ws = new WebSocket('wss://ntfy.sh/U2Nob29sb2d5/wswss://ntfy.sh/U2Nob29sb2d5/ws');
+const ws = new WebSocket('wss://ntfy.sh/U2Nob29sb2d6/ws');
 
 ws.onopen = async () => {
   await initKeys();
