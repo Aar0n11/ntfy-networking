@@ -9,6 +9,7 @@ export async function initWebsocket() {
   const ws = new WebSocket('wss://ntfy.sh/U2Nob29sb2d6/ws');
 
   ws.onopen = async () => {
+    // Broadcast initial handshake to all listening peers
     await fetch("https://ntfy.sh/U2Nob29sb2d6", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -25,16 +26,44 @@ export async function initWebsocket() {
       const msg = JSON.parse(envelope.message);
       if (msg.from === myUUID) return;
 
+      // Handle initial handshake from a new peer
       if (msg.type === 'handshake') {
         if (!clientUUIDs.includes(msg.from)) {
           clientUUIDs.push(msg.from);
           status = "received handshake";
         }
+
+        // Send a targeted acknowledgment back so the new peer registers us
+        await fetch("https://ntfy.sh/U2Nob29sb2d6", {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            type: 'handshake_ack', 
+            from: myUUID, 
+            to: msg.from 
+          })
+        });
       }
 
+      // Handle incoming acknowledgment sent specifically to us
+      if (msg.type === 'handshake_ack') {
+        if (msg.to === myUUID && !clientUUIDs.includes(msg.from)) {
+          clientUUIDs.push(msg.from);
+          console.log("Recieved handshake from " + msg.from)
+          status = "received handshake";
+        }
+      }
+
+      // Handle incoming encrypted messages
       if (msg.type === 'message') {
         if (msg.to && msg.to.includes(myUUID) && msg.dataList[myUUID]) {
           const plaintext = await decryptAES(msg.dataList[myUUID], myUUID);
+
+          const event = new CustomEvent('onMessage', {
+            detail: { message: plaintext }
+          })
+          document.dispatchEvent(event);
+          
           console.log('Received:', plaintext);
         }
       }
