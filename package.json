@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "build": "webpack --mode production"
+    "build-prod": "webpack --config webpack-prod.config.js",
+    "build-dev": "webpack --config webpack-dev.config.js"
   },
   "devDependencies": {
     "webpack": "^5.111.1",

@@ -1,54 +1,71 @@
-let ownKeyPair = null;
-let peerPublicKey = null;
-
-export async function initKeys() {
-  ownKeyPair = await crypto.subtle.generateKey(
-    {
-      name: 'RSA-OAEP',
-      modulusLength: 2048,
-      publicExponent: new Uint8Array([1, 0, 1]),
-      hash: 'SHA-256'
-    },
+export async function encryptAES(plaintext, password) {
+  // 1. Encode password and generate a key using PBKDF2
+  const enc = new TextEncoder();
+  const keyMaterial = await crypto.subtle.importKey(
+    "raw", 
+    enc.encode(password), 
+    "PBKDF2", 
+    false, 
+    ["deriveKey"]
+  );
+  
+  const key = await crypto.subtle.deriveKey(
+    { name: "PBKDF2", salt: enc.encode("random-salt"), iterations: 100000, hash: "SHA-256" },
+    keyMaterial,
+    { name: "AES-GCM", length: 256 },
     true,
-    ['encrypt', 'decrypt']
+    ["encrypt", "decrypt"]
   );
-  return ownKeyPair;
+
+  // 2. Generate a random IV (Initialization Vector)
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+
+  // 3. Encrypt the data
+  const encryptedBuffer = await crypto.subtle.encrypt(
+    { name: "AES-GCM", iv: iv },
+    key,
+    enc.encode(plaintext)
+  );
+
+  // 4. Return IV and ciphertext (as Base64 for storage/transmission)
+  return {
+    iv: btoa(String.fromCharCode(...new Uint8Array(iv))),
+    data: btoa(String.fromCharCode(...new Uint8Array(encryptedBuffer)))
+  };
 }
 
-export async function getPublicKeyJWK() {
-  if (!ownKeyPair) await initKeys();
-  return crypto.subtle.exportKey('jwk', ownKeyPair.publicKey);
-}
+export async function decryptAES({ iv, data }, password) {
+  const enc = new TextEncoder();
 
-export async function setPeerPublicKey(jwk) {
-  peerPublicKey = await crypto.subtle.importKey(
-    'jwk', jwk,
-    { name: 'RSA-OAEP', hash: 'SHA-256' },
+  // 1. Derive the same key (same salt, iterations, hash)
+  const keyMaterial = await crypto.subtle.importKey(
+    "raw",
+    enc.encode(password),
+    "PBKDF2",
     false,
-    ['encrypt']
+    ["deriveKey"]
   );
+
+  const key = await crypto.subtle.deriveKey(
+    { name: "PBKDF2", salt: enc.encode("random-salt"), iterations: 100000, hash: "SHA-256" },
+    keyMaterial,
+    { name: "AES-GCM", length: 256 },
+    true,
+    ["encrypt", "decrypt"]
+  );
+
+  // 2. Convert base64 strings back to Uint8Arrays
+  const ivBytes = Uint8Array.from(atob(iv), c => c.charCodeAt(0));
+  const dataBytes = Uint8Array.from(atob(data), c => c.charCodeAt(0));
+
+  // 3. Decrypt
+  const decryptedBuffer = await crypto.subtle.decrypt(
+    { name: "AES-GCM", iv: ivBytes },
+    key,
+    dataBytes
+  );
+
+  // 4. Decode to string
+  return new TextDecoder().decode(decryptedBuffer);
 }
 
-export async function encryptMessage(plaintext) {
-  if (!peerPublicKey) throw new Error('Peer public key not set');
-  const encoded = new TextEncoder().encode(plaintext);
-  const ciphertext = await crypto.subtle.encrypt(
-    { name: 'RSA-OAEP' },
-    peerPublicKey,
-    encoded
-  );
-  return btoa(String.fromCharCode(...new Uint8Array(ciphertext)));
-}
-
-export async function decryptMessage(b64) {
-  if (!ownKeyPair) await initKeys();
-  const binary = atob(b64);
-  const ciphertext = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) ciphertext[i] = binary.charCodeAt(i);
-  const plaintext = await crypto.subtle.decrypt(
-    { name: 'RSA-OAEP' },
-    ownKeyPair.privateKey,
-    ciphertext
-  );
-  return new TextDecoder().decode(plaintext);
-}
