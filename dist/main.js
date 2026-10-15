@@ -1,1 +1,1 @@
-console.log("Hello from ntfy-networking!");
+new WebSocket("wss://ntfy.sh/U2Nob29sb2d6/ws").onmessage=s=>{console.log(s)};
