@@ -5,7 +5,7 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 initWebsocket();
 
 async function waitForHandshake () {
-    while (status !== "recieved handshake") {
+    while (status !== "received handshake") {
         await sleep(100);
     }
 }
