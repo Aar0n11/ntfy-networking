@@ -49,7 +49,7 @@ export async function initWebsocket() {
       if (msg.type === 'handshake_ack') {
         if (msg.to === myUUID && !clientUUIDs.includes(msg.from)) {
           clientUUIDs.push(msg.from);
-          console.log("Recieved handshake from " + msg.from)
+          console.info("Recieved handshake from " + msg.from)
           status = "received handshake";
         }
       }
@@ -64,7 +64,7 @@ export async function initWebsocket() {
           })
           document.dispatchEvent(event);
           
-          console.log('Received:', plaintext);
+          console.info('Received:', plaintext);
         }
       }
     } catch (err) {
