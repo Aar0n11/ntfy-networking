@@ -11,4 +11,4 @@ In-Progress:
     WASM game engine based on c
 
 
-# This is a personal project, it is a monstrosity of configs and imports.
+## This is a personal project, it is a monstrosity of configs and imports.
