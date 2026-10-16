@@ -3,8 +3,8 @@
 This is a in-progress library for communication between clients with ntfy, but without the hassle and with features added on.
 
 FEATURES:
-    Simple networking - send to individual clients rather than everyone
-    Encryption
+Simple networking - send to individual clients rather than everyone
+Encryption
 
 
 In-Progress:
