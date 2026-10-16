@@ -15,5 +15,8 @@
     <br>
     <button onclick="testWASM()">Test WASM</button>
     <script src="./scripts.js"></script>
+    <script>
+      var testWASM = Module.cwrap("testWASM", "number");
+    </script>
   </body>
 </html>
