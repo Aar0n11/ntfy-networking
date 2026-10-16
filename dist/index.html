@@ -3,4 +3,10 @@
     <button onclick=main()>Send message</button>
     <label id="DEBUG_label"></label>
     <script src="https://cdn.jsdelivr.net/gh/Aar0n11/ntfy-networking@main/dist/ntfy-networking.min.js"></script>
+    <script>
+        (async function () {
+        const instance = await WebAssembly.instantiateStreaming(fetch('engine.wasm'));
+        console.log(instance.exports.main());
+        })()
+    </script>
 </body></html>
