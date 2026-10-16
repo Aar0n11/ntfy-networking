@@ -13,7 +13,6 @@ async function waitForHandshake () {
 async function main() {
     await waitForHandshake();
 
-    console.log("sent");
     const message = document.getElementById("DEBUG_textarea").value;
     sendMessage(message);
 }
