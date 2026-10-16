@@ -6,7 +6,7 @@
     <script>
         (async function () {
         const instance = await WebAssembly.instantiateStreaming(fetch('https://cdn.jsdelivr.net/gh/Aar0n11/ntfy-networking@main/dist/engine.wasm'));
-        console.log(instance.exports.main());
+        console.log(instance.exports.engine_main());
         })()
     </script>
 </body></html>
