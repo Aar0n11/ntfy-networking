@@ -100,7 +100,7 @@ export async function sendMessage(message, documentHash, to = clientUUIDs) {
     to.map(async (uuid) => [uuid, await encryptAES(message, uuid)])
   );
 
-  await fetch("https://ntfy.sh/U2Nob29sb2d6", {
+  await fetch(localhost ? `http://localhost:8080/${topic}/` : `https://ntfy.sh/${topic}/`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
