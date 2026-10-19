@@ -1,7 +1,5 @@
 import { sendMessage, initWebsocket, status } from "./websocket.js";
 
-let mainConfig;
-
 async function loadConfig() {
   try {
     const response = await fetch("config.json");
@@ -25,9 +23,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 document.addEventListener("DOMContentLoaded", () => {
   loadConfig()
     .then((config) => {
-      mainConfig = config;
       initWebsocket(config.topic, config.localhost);
-      console.log(mainConfig);
     })
     .catch((error) => {
       console.error(error);
