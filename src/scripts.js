@@ -24,8 +24,6 @@ async function main() {
     await waitForHandshake();
     await waitForMD5();
 
-    window.getHash = getHash
-
     const message = document.getElementById("DEBUG_textarea").value;
     sendMessage(message, hash);
 }
