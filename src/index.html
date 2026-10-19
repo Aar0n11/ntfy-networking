@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <title>ntfy-networking</title>
+    <script>localStorage.setItem("hash", null)</script>
     <script src="./wasm.js"></script>
   </head>
   <body>
@@ -14,9 +15,16 @@
     <hr>
     <br>
     <button onclick="testWASM()">Test WASM</button>
-    <script src="https://cdn.jsdelivr.net/gh/Aar0n11/ntfy-networking@main/dist/ntfy-networking.min.js"></script>
+    <script src="./ntfy-networking.min.js"></script>
     <script>
-      var testWASM = Module.cwrap("testWASM", "number");
+        createMd5Module().then((Module) => {
+            const calculateMd5 = Module.cwrap('calculate_md5', 'string', ['string']);
+            const testWASM = Module.cwrap('testWASM', 'number');
+
+            const doc = document.documentElement.innerHTML;
+            const hash = calculateMd5(doc);
+            localStorage.setItem("hash", hash);
+        });
     </script>
   </body>
 </html>
