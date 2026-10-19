@@ -56,8 +56,16 @@ export async function initWebsocket() {
 
       // Handle incoming encrypted messages
       if (msg.type === 'message') {
-        if (msg.to && msg.to.includes(myUUID) && msg.dataList[myUUID]) {
-          const plaintext = await decryptAES(msg.dataList[myUUID], myUUID);
+        let newMsg;
+        for(let i = 0; i < clientUUIDs.length; i++) {
+          if(JSON.parse(await decryptAES(msg, clientUUIDs[i]))) {
+            newMsg = JSON.parse(await decryptAES(msg, clientUUIDs[i])); 
+            break;
+          }
+        }
+
+        if (newMsg.to && newMsg.to.includes(myUUID) && newMsg.dataList[myUUID]) {
+          const plaintext = await decryptAES(newMsg.dataList[myUUID], myUUID);
 
           const event = new CustomEvent('onMessage', {
             detail: { message: plaintext }
@@ -90,7 +98,7 @@ export async function sendMessage(message, to = clientUUIDs) {
       type: 'message',
       from: myUUID,
       to: to,
-      dataList: Object.fromEntries(encryptedEntries)
+      dataList: await encryptAES(JSON.stringify(Object.fromEntries(encryptedEntries)), myUUID)
     })
   });
 }
