@@ -56,6 +56,8 @@ export async function initWebsocket() {
 
       // Handle incoming encrypted messages
       if (msg.type === 'message') {
+        const hash = localStorage.getItem("hash");
+
         let newMsg;
         for(let i = 0; i < clientUUIDs.length; i++) {
           if(JSON.parse(await decryptAES(msg, clientUUIDs[i]))) {
@@ -63,6 +65,8 @@ export async function initWebsocket() {
             break;
           }
         }
+
+        if(hash !== newMsg.hash) return;
 
         if (newMsg.to && newMsg.to.includes(myUUID) && newMsg.dataList[myUUID]) {
           const plaintext = await decryptAES(newMsg.dataList[myUUID], myUUID);
@@ -81,7 +85,7 @@ export async function initWebsocket() {
   };
 }
 
-export async function sendMessage(message, to = clientUUIDs) {
+export async function sendMessage(message, documentHash, to = clientUUIDs) {
   if (to.length === 0) {
     console.warn("No recipient UUIDs available to send message.");
     return;
@@ -98,7 +102,8 @@ export async function sendMessage(message, to = clientUUIDs) {
       type: 'message',
       from: myUUID,
       to: to,
-      dataList: await encryptAES(JSON.stringify(Object.fromEntries(encryptedEntries)), myUUID)
+      dataList: await encryptAES(JSON.stringify(Object.fromEntries(encryptedEntries)), myUUID),
+      hash: window.getHash()
     })
   });
 }

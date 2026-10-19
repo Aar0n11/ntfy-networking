@@ -1,5 +1,10 @@
 #!/bin/sh
-emcc src/wasm.c -o dist/wasm.js -s NO_EXIT_RUNTIME=1 -s EXPORTED_RUNTIME_METHODS=ccall,cwrap -s ENVIRONMENT=web
+emcc ./src/wasm.c -o ./dist/wasm.js \
+  -sEXPORTED_RUNTIME_METHODS='["cwrap"]' \
+  -sEXPORTED_FUNCTIONS='["_main", "_calculate_md5", "_testWASM", "_malloc", "_free"]' \
+  -sMODULARIZE=1 \
+  -sEXPORT_NAME='createMd5Module'
+
 npm run build-prod
 npm run build-dev
 
