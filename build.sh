@@ -16,3 +16,6 @@ cp ./dist/wasm.wasm ./dev/wasm.wasm
 
 cp ./src/config.json ./dist/config.json
 cp ./src/config.json ./dev/config.json
+
+cp ./src/loadWASM.js ./dist/loadWASM.js
+cp ./src/loadWASM.js ./dev/loadWASM.js

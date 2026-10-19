@@ -168,3 +168,7 @@ export async function sendMessage(message, documentHash, to = clientUUIDs) {
     },
   );
 }
+
+export function getClients() {
+  return clientUUIDs;
+}

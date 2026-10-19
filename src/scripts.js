@@ -1,4 +1,4 @@
-import { sendMessage, initWebsocket, status } from "./websocket.js";
+import { sendMessage, initWebsocket, status, getClients } from "./websocket.js";
 
 async function loadConfig() {
   try {
@@ -58,11 +58,11 @@ async function waitForMD5() {
   hash = localStorage.getItem("hash");
 }
 
-async function message(message) {
+async function message(message, clients = getClients()) {
   await waitForHandshake();
   await waitForMD5();
 
-  sendMessage(message, hash);
+  sendMessage(message, hash, clients);
 }
 
 async function debug() {
@@ -75,3 +75,4 @@ async function debug() {
 
 window.debug = debug;
 window.sendMessage = message;
+window.getClients = getClients;
