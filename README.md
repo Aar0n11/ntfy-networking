@@ -4,11 +4,8 @@ This is a in-progress library for communication between clients with ntfy, but w
 
 FEATURES:<br>
 Simple networking - send to individual clients rather than everyone<br>
-Encryption
-
-
-In-Progress:<br>
-    WASM game engine based on c  
+Encryption<br>
+Hash testing
 
 
 ## This is a personal project, it is a monstrosity of configs and imports.
