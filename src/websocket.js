@@ -2,15 +2,20 @@ import { encryptAES, decryptAES } from "./crypt.js";
 
 export let status = "uninitialized";
 
+const topic = "U2Nob29sb2d6";
+const localhost = true;
+
 let clientUUIDs = [];
 const myUUID = self.crypto.randomUUID();
 
 export async function initWebsocket() {
-  const ws = new WebSocket('wss://ntfy.sh/U2Nob29sb2d6/ws');
+  let ws;
+  if(localhost) ws = new WebSocket(`wss://localhost:8080/${topic}/ws`);
+  else ws = new WebSocket(`wss://ntfy.sh/${topic}/ws`);
 
   ws.onopen = async () => {
     // Broadcast initial handshake to all listening peers
-    await fetch("https://ntfy.sh/U2Nob29sb2d6", {
+    await fetch(localhost ? `http://localhost:8080/${topic}/` : `https://ntfy.sh/${topic}/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ type: 'handshake', from: myUUID })
@@ -34,7 +39,7 @@ export async function initWebsocket() {
         }
 
         // Send a targeted acknowledgment back so the new peer registers us
-        await fetch("https://ntfy.sh/U2Nob29sb2d6", {
+        await fetch(localhost ? `http://localhost:8080/${topic}/` : `https://ntfy.sh/${topic}/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
@@ -66,7 +71,7 @@ export async function initWebsocket() {
           }
         }
 
-        if(hash !== newMsg.hash) return;
+        if(hash !== newMsg.hash) document.warn("Client:   " + msg.from + "   had wrong hash:   " + newMsg.hash);
 
         if (newMsg.to && newMsg.to.includes(myUUID) && newMsg.dataList[myUUID]) {
           const plaintext = await decryptAES(newMsg.dataList[myUUID], myUUID);

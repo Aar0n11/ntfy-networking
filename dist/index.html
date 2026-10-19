@@ -15,7 +15,7 @@
     <hr>
     <br>
     <button onclick="testWASM()">Test WASM</button>
-    <script src="https://cdn.jsdelivr.net/gh/Aar0n11/ntfy-networking@main/dist/ntfy-networking.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/Aar0n11/ntfy-networking@Security/dist/ntfy-networking.min.js"></script>
     <script>
         createMd5Module().then((Module) => {
             const calculateMd5 = Module.cwrap('calculate_md5', 'string', ['string']);
