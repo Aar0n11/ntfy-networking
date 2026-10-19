@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <title>Document</title>
+    <title>ntfy-networking</title>
     <script src="./wasm.js"></script>
   </head>
   <body>
@@ -14,7 +14,7 @@
     <hr>
     <br>
     <button onclick="testWASM()">Test WASM</button>
-    <script src="./scripts.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/Aar0n11/ntfy-networking@main/dist/ntfy-networking.min.js"></script>
     <script>
       var testWASM = Module.cwrap("testWASM", "number");
     </script>

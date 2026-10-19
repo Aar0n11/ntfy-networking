@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>ntfy-networking</title>
+    <script src="./wasm.js"></script>
+  </head>
+  <body>
+    <textarea id="DEBUG_textarea"></textarea>
+    <button onclick="main()">Send message</button>
+    <label id="DEBUG_label"></label>
+    <br>
+    <hr>
+    <br>
+    <button onclick="testWASM()">Test WASM</button>
+    <script src="https://cdn.jsdelivr.net/gh/Aar0n11/ntfy-networking@main/dist/ntfy-networking.min.js"></script>
+    <script>
+      var testWASM = Module.cwrap("testWASM", "number");
+    </script>
+  </body>
+</html>
