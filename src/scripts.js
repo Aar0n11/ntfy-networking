@@ -17,17 +17,31 @@ async function loadConfig() {
 }
 
 let hash;
+let _config;
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-document.addEventListener("DOMContentLoaded", () => {
-  loadConfig()
-    .then((config) => {
-      initWebsocket(config.topic, config.localhost);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const config = await loadConfig();
+    _config = config;
+
+    initWebsocket(
+      config.topic,
+      config.localhost,
+      config.url,
+      config.debug
+    );
+
+    if (config.debug) {
+      document.addEventListener("onMessage", (e) => {
+        document.getElementById("DEBUG_label").innerText =
+          e.detail.message;
+      });
+    }
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 async function waitForHandshake() {
@@ -44,16 +58,20 @@ async function waitForMD5() {
   hash = localStorage.getItem("hash");
 }
 
-async function main() {
+async function message(message) {
   await waitForHandshake();
   await waitForMD5();
 
-  const message = document.getElementById("DEBUG_textarea").value;
   sendMessage(message, hash);
 }
 
-document.addEventListener("onMessage", (e) => {
-  document.getElementById("DEBUG_label").innerText = e.detail.message;
-});
+async function debug() {
+  await waitForHandshake();
+  await waitForMD5();
 
-window.main = main;
+  const messageText = document.getElementById("DEBUG_textarea").value;
+  message(messageText);
+}
+
+window.debug = debug;
+window.sendMessage = message;

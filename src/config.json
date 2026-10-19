@@ -1,4 +1,6 @@
 {
     "topic": "U2Nob29sb2d6",
-    "localhost": true
+    "localhost": true,
+    "url": "aaron-ntfy.eu1.netbird.services",
+    "debug": true
 }

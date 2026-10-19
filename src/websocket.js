@@ -7,21 +7,24 @@ const myUUID = self.crypto.randomUUID();
 
 let topic;
 let localhost;
+let url;
+let debug;
 
-export async function initWebsocket(ntfyTopic, ntfyLocalhost = false) {
+export async function initWebsocket(ntfyTopic, ntfyLocalhost = false, ntfyURL, documentDebug = false) {
   topic = ntfyTopic;
   localhost = ntfyLocalhost;
+  url = ntfyURL;
+  debug = documentDebug;
 
   let ws;
   if (localhost) ws = new WebSocket(`ws://localhost:8080/${topic}/ws`);
-  else ws = new WebSocket(`wss://ntfy.sh/${topic}/ws`);
+  else ws = new WebSocket(`wss://${url}/${topic}/ws`);
 
   ws.onopen = async () => {
+    console.info(`Connected to ${url}`);
     // Broadcast initial handshake to all listening peers
     await fetch(
-      localhost
-        ? `http://localhost:8080/${topic}`
-        : `https://ntfy.sh/${topic}/`,
+      localhost ? `http://localhost:8080/${topic}` : `https://${url}/${topic}/`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -54,7 +57,7 @@ export async function initWebsocket(ntfyTopic, ntfyLocalhost = false) {
         await fetch(
           localhost
             ? `http://localhost:8080/${topic}`
-            : `https://ntfy.sh/${topic}/`,
+            : `https://${url}/${topic}/`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -66,13 +69,15 @@ export async function initWebsocket(ntfyTopic, ntfyLocalhost = false) {
           },
         );
 
+        if(debug) console.info("Received handshake from " + msg.from);
+
         return;
       }
 
       if (msg.type === "handshake_ack") {
         if (msg.to === myUUID && !clientUUIDs.includes(msg.from)) {
           clientUUIDs.push(msg.from);
-          console.info("Received handshake from " + msg.from);
+          if(debug) console.info("Received acknowledgement from " + msg.from);
           status = "received handshake";
         }
 
@@ -121,7 +126,7 @@ export async function initWebsocket(ntfyTopic, ntfyLocalhost = false) {
             }),
           );
 
-          console.info("Received:", plaintext);
+          if(debug) console.info("Received:", plaintext);
         }
       }
     } catch (err) {
@@ -155,7 +160,7 @@ export async function sendMessage(message, documentHash, to = clientUUIDs) {
   const encryptedEnvelope = await encryptAES(payload, myUUID);
 
   await fetch(
-    localhost ? `http://localhost:8080/${topic}` : `https://ntfy.sh/${topic}/`,
+    localhost ? `http://localhost:8080/${topic}` : `https://${url}/${topic}/`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },

@@ -9,7 +9,7 @@
   </head>
   <body>
     <textarea id="DEBUG_textarea"></textarea>
-    <button onclick="main()">Send message</button>
+    <button onclick="debug()">Send message</button>
     <label id="DEBUG_label"></label>
     <br>
     <hr>
@@ -17,9 +17,10 @@
     <button onclick="testWASM()">Test WASM</button>
     <script src="./ntfy-networking.min.js"></script>
     <script>
+      let testWASM;
         createMd5Module().then((Module) => {
             const calculateMd5 = Module.cwrap('calculate_md5', 'string', ['string']);
-            const testWASM = Module.cwrap('testWASM', 'number');
+            testWASM = Module.cwrap('testWASM', 'number', []);
 
             const doc = document.documentElement.innerHTML;
             const hash = calculateMd5(doc);
