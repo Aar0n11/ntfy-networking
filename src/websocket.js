@@ -2,13 +2,16 @@ import { encryptAES, decryptAES } from "./crypt.js";
 
 export let status = "uninitialized";
 
-const topic = "U2Nob29sb2d6";
-const localhost = true;
-
 let clientUUIDs = [];
 const myUUID = self.crypto.randomUUID();
 
-export async function initWebsocket() {
+let topic;
+let localhost;
+
+export async function initWebsocket(ntfyTopic, ntfyLocalhost = false) {
+  topic = ntfyTopic;
+  localhost = ntfyLocalhost;
+
   let ws;
   if (localhost) ws = new WebSocket(`ws://localhost:8080/${topic}/ws`);
   else ws = new WebSocket(`wss://ntfy.sh/${topic}/ws`);

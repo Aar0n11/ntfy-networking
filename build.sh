@@ -13,3 +13,6 @@ cp ./src/index.html ./dev/index.html
 
 cp ./dist/wasm.js ./dev/wasm.js
 cp ./dist/wasm.wasm ./dev/wasm.wasm
+
+cp ./src/config.json ./dist/config.json
+cp ./src/config.json ./dev/config.json
