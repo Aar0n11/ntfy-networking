@@ -18,6 +18,6 @@ Use "debug" = true inside the config to set debug mode to true, which enables so
 
 Inside the config file, the topic must be a string of alphanumeric characters, and the url must not have any preceeding protocol or succeeding "/". It may have a port. Setting "localhost" to true will point the url to localhost:8080/topic.<br>
 
-
+The index.html inside dist/ and dev/ is an example file of the imports needed. 
 
 ## This is a personal project, it is a monstrosity of configs and imports.

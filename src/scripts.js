@@ -1,5 +1,7 @@
 import { sendMessage, initWebsocket, status, getClients } from "./websocket.js";
 
+localStorage.setItem("hash", null);
+
 async function loadConfig() {
   try {
     const response = await fetch("config.json");
@@ -26,17 +28,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const config = await loadConfig();
     _config = config;
 
-    initWebsocket(
-      config.topic,
-      config.localhost,
-      config.url,
-      config.debug
-    );
+    initWebsocket(config.topic, config.localhost, config.url, config.debug);
 
     if (config.debug) {
       document.addEventListener("onMessage", (e) => {
-        document.getElementById("DEBUG_label").innerText =
-          e.detail.message;
+        document.getElementById("DEBUG_label").innerText = e.detail.message;
       });
     }
   } catch (error) {

@@ -3,19 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <title>ntfy-networking</title>
-    <script>localStorage.setItem("hash", null)</script>
-    <script src="./wasm.js"></script>
+    <title>ntfy-networking test</title>
+    <script>
+    </script>
+    <script src="https://cdn.jsdelivr.net/gh/Aar0n11/ntfy-networking@main/dist/wasm.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/Aar0n11/ntfy-networking@main/dist/loadWASM.js"></script>
   </head>
   <body>
     <textarea id="DEBUG_textarea"></textarea>
     <button onclick="debug()">Send message</button>
     <label id="DEBUG_label"></label>
-    <br>
-    <hr>
-    <br>
+    <br />
+    <hr />
+    <br />
     <button onclick="testWASM()">Test WASM</button>
-    <script src="./ntfy-networking.min.js"></script>
-    <script src="loadWASM.js"></script>
+    <script src="./ntfy-networking.min.js"></script> <!-- Replace with server url (https://cdn.jsdelivr.net/gh/Aar0n11/ntfy-networking@main/dist/ntfy-networking.min.js) -->
   </body>
 </html>
