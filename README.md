@@ -22,7 +22,9 @@ The index.html inside dist/ and dev/ is an example file of the imports needed.
 
 ### Recommended:<br>
 Use the docker configuration provided for a self-hosted ntfy server. Make sure you have docker installed and run
-    docker compose up -d
+```bash
+docker compose up -d
+```
 To start the container.
 
 ## This is a personal project, it is a monstrosity of configs and imports. Use at your own risk.
