@@ -14,7 +14,7 @@ Use the exported function "sendMessage" to send messages to clients.<br>
 
 The default client list is all clients, but the exported function "getClients" will return a list of all registered clients, which can be used to filter which clients to send to.<br>
 
-Use "debug" = true inside the config to set debug mode to true, which enables some console info such as recieving handshakes and messages. If debug mode is on, the script will look for a textarea with a id of "DEBUB_textarea", a label called "DEBUG_label", and a "debug" function used to send whatever is in the textarea, and incoming messages will be recieved and displayed in the label.<br>
+Use "debug" = true inside the config to set debug mode to true, which enables some console info such as recieving handshakes and messages. If debug mode is on, the script will look for a textarea with a id of "DEBUG_textarea", a label called "DEBUG_label", and a "debug" function used to send whatever is in the textarea, and incoming messages will be recieved and displayed in the label.<br>
 
 Inside the config file, the topic must be a string of alphanumeric characters, and the url must not have any preceeding protocol or succeeding "/". It may have a port. Setting "localhost" to true will point the url to localhost:8080/topic.<br>
 
