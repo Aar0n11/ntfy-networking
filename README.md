@@ -20,4 +20,9 @@ Inside the config file, the topic must be a string of alphanumeric characters, a
 
 The index.html inside dist/ and dev/ is an example file of the imports needed. 
 
-## This is a personal project, it is a monstrosity of configs and imports.
+### Recommended:<br>
+Use the docker configuration provided for a self-hosted ntfy server. Make sure you have docker installed and run
+    docker compose up -d
+To start the container.
+
+## This is a personal project, it is a monstrosity of configs and imports. Use at your own risk.

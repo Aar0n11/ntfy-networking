@@ -1,3 +1,4 @@
 node_modules/
 .vscode/
-docker/
+docker/ntfy-cache/
+docker/ntfy-etc/

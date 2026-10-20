@@ -1,0 +1,16 @@
+services:
+  ntfy:
+    image: binwiederhier/ntfy:latest
+    container_name: ntfy
+    command: serve
+    environment:
+      - NTFY_BASE_URL=http://localhost:80
+      - NTFY_VISITOR_REQUEST_LIMIT_BURST=1000000
+      - NTFY_VISITOR_REQUEST_LIMIT_REPLENISH=1ms
+      - NTFY_VISITOR_MESSAGE_DAILY_LIMIT=1000000
+    ports:
+      - "80:80"
+    volumes:
+      - ./ntfy-cache:/var/cache/ntfy
+      - ./ntfy-etc:/etc/ntfy
+    restart: unless-stopped
